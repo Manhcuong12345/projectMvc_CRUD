@@ -67,6 +67,7 @@ namespace DotNetCore5CRUD.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "SuperAdmin")]
         [HttpGet]
         public async Task<IActionResult> Update(string id)
         {
@@ -88,6 +89,7 @@ namespace DotNetCore5CRUD.Controllers
             return View("Update", user);
         }
 
+        [Authorize(Roles = "SuperAdmin")]
         [HttpPost]
         public async Task<IActionResult> Update(User model)
         {
@@ -102,7 +104,7 @@ namespace DotNetCore5CRUD.Controllers
             return RedirectToAction("Index", "User");
         }
 
-
+        [Authorize(Roles = "SuperAdmin")]
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
@@ -118,6 +120,7 @@ namespace DotNetCore5CRUD.Controllers
             return View("Index", "User");
         }
 
+        [Authorize(Roles = "SuperAdmin")]
         //Hàm check vai trò role cho user
         [HttpGet]
         public async Task<IActionResult> ManageRole(string userId)
@@ -147,6 +150,7 @@ namespace DotNetCore5CRUD.Controllers
             return View(users);
         }
 
+        [Authorize(Roles = "SuperAdmin")]
         //Hàm add vai trò role user
         [HttpPost]
         public async Task<IActionResult> UpdateRole(UserRole model)

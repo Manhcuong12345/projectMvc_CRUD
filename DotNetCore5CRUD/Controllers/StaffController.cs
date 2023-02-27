@@ -197,7 +197,7 @@ namespace DotNetCore5CRUD.Controllers
             return View(user);
         }
 
-        [Authorize(Roles ="SuperAdmin,Admin")]
+        [Authorize(Roles ="SuperAdmin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
