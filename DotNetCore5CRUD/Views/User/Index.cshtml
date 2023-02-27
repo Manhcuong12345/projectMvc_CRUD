@@ -1,0 +1,115 @@
+﻿@model IEnumerable<User>
+
+@{
+    ViewData["Title"] = "User";
+}
+@*-thiết lập Model cho View, khi gọi phương thức View của Controller. Trong View .cshtml sử dụng chỉ thị @model để thiết lập
+-kiểu truyền tới cho Model của View
+-Sử dụng property ViewData của View và Controller*@
+
+@*Khai báo model là khai báo được dùng để khai báo kiểu của ViewModel. Còn Model là một biến sử dụng để truy cập vào ViewModel. 
+Kiểu của Model được khai báo tùy thuộc vào khai báo @model ở trên.*@
+ 
+
+@if (User.Identity.IsAuthenticated)
+{
+  <h3>
+    <i class="icofont-user-alt-3"></i>
+    Tài khoản
+</h3>
+
+<hr />
+
+<a class="btn btn-primary" asp-action="Create">
+    <i class="bi bi-plus"></i>Tạo tài khoản
+</a>
+   
+    <hr />
+    <table class="table table-sm table-bordered">
+        <tr>
+            <th>Email</th>
+            <th>Số điện thoại</th>
+            <th>Chỉnh sửa</th>
+            <th>Xóa</th>
+            <th>Phân quyền</th>
+        </tr>
+        @*Truyền dữ liệu Controller tới View với Model*@
+        @*ở View, Razor có thể truy cập được nó thông qua thuộc tính Model, nhưng ở phần đầu cần khai báo kiểu Model này với @model List<string>*@
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Email</td>
+                <td>@user.PhoneNumber</td>
+                <td class="data">
+                    <a asp-action="Update" asp-route-id="@user.Id" class="btn btn-outline-primary">
+                        <i class="bi bi-pencil"></i>
+                        Chỉnh sửa
+                    </a>
+                </td>
+               <td class="data">
+                    <form asp-action="Delete" asp-route-id="@user.Id" method="post">
+                        <button type="submit" class="btn btn-sm btn-danger ">
+                            <i class="bi bi-trash"></i>
+                            Xóa
+                        </button>
+                    </form>
+                   
+                </td>
+                 <td>
+                    <a class="btn btn-primary" asp-action="ManageRole" asp-route-userId="@user.Id">Vai trò</a>
+                </td>
+            </tr>
+        }
+    </table>
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning" role="alert">
+            <i class="bi bi-exclamation-triangle"></i>
+            Không tìm thấy thông tin tài khoản
+        </div>
+    }
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.data').on('click', function () {
+                var btn = $(this);
+
+                bootbox.confirm({
+                    message: "Are you sure that you need to delete this movie?",
+                    buttons: {
+                        confirm: {
+                            label: 'Yes',
+                            className: 'btn-danger'
+                        },
+                        cancel: {
+                            label: 'No',
+                            className: 'btn-outline-secondary'
+                        }
+                    },
+                    callback: function (result) {
+                        if (result) {
+                            $.ajax({
+                                url: '/user/delete/' + btn.data('id'),
+                                success: function () {
+                                    var movieContainer = btn.parents('.table');
+                                    movieContainer.addClass('animate__animated animate__zoomOut');
+
+                                    setTimeout(function () {
+                                        movieContainer.remove();
+                                    }, 1000);
+
+                                    toastr.success('Movies deleted');
+                                },
+                                error: function () {
+                                    toastr.error('Something went wrong!');
+                                }
+                            });
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+}

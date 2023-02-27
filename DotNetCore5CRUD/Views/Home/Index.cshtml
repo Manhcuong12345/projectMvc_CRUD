@@ -1,0 +1,14 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+  @if (User.Identity.IsAuthenticated)
+                    {
+<div class="text-center">
+    <h3 class="display-4">Chào mừng @User.Identity.Name </h3>
+    <h3 class="display-4">Đến với project QLNV CRUD</h3>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+                    }

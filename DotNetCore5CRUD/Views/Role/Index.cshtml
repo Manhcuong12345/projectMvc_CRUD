@@ -1,0 +1,43 @@
+﻿@model IEnumerable<IdentityRole>
+
+@using Microsoft.AspNetCore.Identity
+@using DotNetCore5CRUD.Models
+
+@{
+    ViewData["Title"] = "Role";
+}
+
+<h1>Quản lý quyền</h1>
+
+@*View khái niệm Partial Page (hoặc Partial View) được sử dụng khi bạn chia nhỏ các trang Razor Page, 
+hay các View ra thành từng phần nhỏ.*@
+@*một Role đối tượng mới được khởi tạo và chuyển đến model thuộc tính để liên kết:*@
+@*Partial Tag Helper*@
+<partial name="_RoleForm" model="new Role()" />
+
+<table class="table table-striped mt-4">
+    <thead>
+        <tr class="bg-primary text-white">
+            @*<th>Id</th>*@
+            <th>Tên quyền</th>
+            <th>Xóa</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var role in Model)
+        {
+            <tr>
+                <td>@role.Name</td>
+                <td>
+                    <form asp-action="Delete" asp-route-id="@role.Id" method="post" class="js-delete">
+                        <button type="submit" class="btn btn-sm btn-danger ">
+                            <i class="bi bi-trash"></i>
+                            Xóa
+                        </button>
+                    </form>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

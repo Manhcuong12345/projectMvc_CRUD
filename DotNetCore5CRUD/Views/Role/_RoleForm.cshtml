@@ -1,0 +1,12 @@
+﻿@model Role
+
+@*View khái niệm Partial Page (hoặc Partial View) được sử dụng khi bạn chia nhỏ các trang Razor Page, hay các View ra thành từng phần nhỏ.*@
+<form method="Post" asp-action="Add">
+    <div class="input-group mb-3">
+        <input asp-for="Name" class="form-control" placeholder="Role name..." />
+        <div class="input-group-append">
+            <button type="submit" class="btn btn-primary">Thêm quyền</button>
+        </div>
+    </div>
+    <span asp-validation-for="Name" class="text-danger"></span>
+</form>

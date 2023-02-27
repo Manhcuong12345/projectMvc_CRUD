@@ -1,0 +1,97 @@
+﻿@model Staff
+
+@{
+    ViewData["Title"] = "Staff Form";
+}
+
+@*Model là một biến sử dụng để truy cập vào View.
+  Kiểu của Model được khai báo tùy thuộc vào khai báo @model ở trên.*@
+
+<h2>@(Model.Id > 0 ? "Chỉnh sửa nhân viên" : "Thêm nhân viên") </h2>
+
+<hr />
+
+@if (User.Identity.IsAuthenticated)
+{
+    <section class="row justify-content-between">
+        <div class="col-md-4">
+            <form method="POST" asp-action="@(Model.Id > 0 ? "Edit" : "Create")" enctype="multipart/form-data">
+                <input type="hidden" asp-for="Id" />
+                <div class="form-group">
+                    <label class="text-muted" asp-for="FullName">Họ tên</label>
+                    <input type="text" class="form-control" asp-for="FullName" maxlength="250" />
+                    <span asp-validation-for="FullName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="text-muted" asp-for="Title">Mô tả</label>
+                    <input type="text" class="form-control" asp-for="Title" maxlength="250" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+                <div class="form-group w-50">
+                    <label class="text-muted" asp-for="Job">Công việc</label>
+                    <input type="text" class="form-control" asp-for="Job" maxlength="250" />
+                    <span asp-validation-for="Job" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="text-muted" asp-for="Address">Địa chỉ</label>
+                    <textarea class="form-control" asp-for="Address" maxlength="2500" rows="2"></textarea>
+                    <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="text-muted" asp-for="Email">Email</label>
+                    <input type="text" class="form-control" asp-for="Email" maxlength="250" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="text-muted" asp-for="PhoneNumber">Số điện thoại</label>
+                    <input type="text" class="form-control" asp-for="PhoneNumber" maxlength="250" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" asp-for="Poster" accept=".png, .jpg" />
+                    <label class="custom-file-label" asp-for="Poster">Ảnh đại diện</label>
+                    <span asp-validation-for="Poster" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-primary mt-4">
+                    <i class="bi bi-check"></i>
+                    Lưu
+                </button>
+                <a asp-action="Index" class="btn btn-outline-secondary mt-4">
+                    <i class="bi bi-x"></i>
+                    Hủy
+                </a>
+            </form>
+        </div>
+        <div class="col-md-4">
+            <div id="poster-container" class="@(Model.Id > 0 ? string.Empty : "d-none")">
+                <img src="@(Model.Id > 0 ? $"data:image/*;base64,{Convert.ToBase64String(Model.Poster)}" : string.Empty)" alt="Poster" class="img-thumbnail" />
+            </div>
+        </div>
+    </section>
+}
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script>
+        $(document).ready(function () {
+            $('#Poster').on('change', function () {
+                var selectedFile = $(this).val().split('\\').pop();
+                $(this).siblings('label').text(selectedFile);
+
+                var posterContainer = $('#poster-container');
+                var image = window.URL.createObjectURL(this.files[0]);
+
+                posterContainer.removeClass('d-none');
+                posterContainer.find('img').attr('src', image);
+            });
+
+            $('#Year').datepicker({
+                format: 'yyyy',
+                viewMode: 'years',
+                minViewMode: 'years',
+                autoclose: true,
+                startDate: new Date('1950-01-01'),
+                endDate: new Date()
+            });
+        });
+    </script>
+}

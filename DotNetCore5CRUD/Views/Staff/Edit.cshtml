@@ -1,0 +1,84 @@
+﻿@model DotNetCore5CRUD.Dto.StaffDto
+
+@{
+    ViewData["Title"] = "Staff Eidt";
+}
+
+<h4>Chỉnh sửa nhân viên</h4>
+
+<hr />
+
+<section class="row justify-content-between">
+    <div class="col-md-4">
+        <form method="POST" asp-action="Edit" enctype="multipart/form-data">
+            <input type="hidden" asp-for="Id" />
+
+            <div class="form-group">
+                <label class="text-muted" asp-for="FullName">Họ Tên</label>
+                <input type="text" class="form-control" asp-for="FullName" maxlength="250" />
+                <span asp-validation-for="FullName" class="text-danger"></span>
+            </div>
+          
+            <div class="form-group">
+                <label class="text-muted" asp-for="Email"></label>
+                <input type="text" class="form-control" asp-for="Email" maxlength="250" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+          
+            <div class="form-group">
+                <label class="text-muted" asp-for="PhoneNumber">Số điện thoại</label>
+                <input type="text" class="form-control" asp-for="PhoneNumber" maxlength="250" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="custom-file">
+                @*  <label class="text-muted" asp-for="Poster">Ảnh</label>*@
+                <input type="file" class="custom-file-input" asp-for="Poster" accept=".png, .jpg" />
+                <label class="custom-file-label" asp-for="Poster"></label>
+                <span asp-validation-for="Poster" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary mt-4">
+                <i class="bi bi-check"></i>
+                Save
+            </button>
+            <a asp-action="Index" class="btn btn-outline-secondary mt-4">
+                <i class="bi bi-x"></i>
+                Cancel
+            </a>
+        </form>
+    </div>
+    <div class="col-md-4">
+        <div id="poster-container" class="@(Model.Id > 0 ? string.Empty : "d-none")">
+            <img src="@(Model.Id > 0 ? $"data:image/*;base64,{Convert.ToBase64String(Model.Poster)}" : string.Empty)" alt="Poster" class="img-thumbnail" />
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+            $('#Poster').on('change', function () {
+                var selectedFile = $(this).val().split('\\').pop();
+                $(this).siblings('label').text(selectedFile);
+
+                var posterContainer = $('#poster-container');
+                var image = window.URL.createObjectURL(this.files[0]);
+
+                posterContainer.removeClass('d-none');
+                posterContainer.find('img').attr('src', image);
+            });
+
+            $('#Year').datepicker({
+                format: 'yyyy',
+                viewMode: 'years',
+                minViewMode: 'years',
+                autoclose: true,
+                startDate: new Date('1950-01-01'),
+                endDate: new Date()
+            });
+        });
+    </script>
+}
+
